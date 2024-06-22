@@ -36,7 +36,7 @@ export default function Page(): React.JSX.Element {
   };
 
   const fetchCategoriesCallback = useCallback(async () => {
-    let response = await fetchCategories();
+    const response = await fetchCategories();
     setCategories(response);
   }, []);
 
@@ -50,9 +50,9 @@ export default function Page(): React.JSX.Element {
     try {
       if (delCategory) await deleteCategory(delCategory);
       setIsConfirmationModalOpen(false);
-      toast.success("Category Deleted Successfully", { autoClose: 3000 });
+      toast.success('Category Deleted Successfully', { autoClose: 3000 });
       fetchCategoriesCallback();
-    } catch (e:any) {
+    } catch (e: any) {
       toast.error(e.message, { autoClose: 3000 });
     }
   };

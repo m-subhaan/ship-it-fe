@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { fetchCategories } from '@/services/categories';
 import { createProduct } from '@/services/products';
 import { toast, ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
@@ -47,7 +48,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
   const [isSaveDisable, setIsSaveDisable] = useState<boolean>(true);
 
   const fetchCategoriesCallback = useCallback(async () => {
-    let response = await fetchCategories();
+    const response = await fetchCategories();
     setCategories(
       response.map((x: any) => ({ label: x.categoryName, value: x.categoryId, subCategory: x.subCategory }))
     );
@@ -119,12 +120,10 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             size="small"
             fullWidth
             margin="normal"
-            required={true}
-            onChange={(e: any) => setProduct({ ...product, title: e.target.value })}
+            required
+            onChange={(e: any) => { setProduct({ ...product, title: e.target.value }); }}
           />
-          {categories.length && (
-            <>
-              <Autocomplete
+          {categories.length ? <Autocomplete
                 size="small"
                 fullWidth
                 options={categories}
@@ -134,57 +133,55 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
                     newValue?.subCategory?.map((x: any) => ({ label: x.subCategoryName, value: x.subCategoryId })) || []
                   );
                 }}
-                renderInput={(params) => <TextField {...params} label="Category" margin="normal" required={true} />}
-              />
-            </>
-          )}
+                renderInput={(params) => <TextField {...params} label="Category" margin="normal" required />}
+              /> : null}
           <Autocomplete
             size="small"
             fullWidth
-            onChange={(event: any, newValue: any) => setProduct({ ...product, subCategoryId: newValue?.value })}
+            onChange={(event: any, newValue: any) => { setProduct({ ...product, subCategoryId: newValue?.value }); }}
             options={subCategories}
             renderInput={(params) => <TextField {...params} label="Sub Category" margin="normal" />}
           />
         </Stack>
-        <Stack direction="row" spacing={4} useFlexGap={true}>
+        <Stack direction="row" spacing={4} useFlexGap>
           <TextField
             label="Brand"
             margin="normal"
             size="small"
             fullWidth
-            required={true}
-            onChange={(e: any) => setProduct({ ...product, brand: e.target.value })}
+            required
+            onChange={(e: any) => { setProduct({ ...product, brand: e.target.value }); }}
           />
           <TextField
             label="Vendor"
             margin="normal"
             fullWidth
             size="small"
-            onChange={(e: any) => setProduct({ ...product, vendor: e.target.value })}
+            onChange={(e: any) => { setProduct({ ...product, vendor: e.target.value }); }}
           />
 
           <Autocomplete
             size="small"
             fullWidth
             options={['ACTIVE', 'DRAFT']}
-            defaultValue={'ACTIVE'}
+            defaultValue="ACTIVE"
             onChange={(event: any, newValue: any) => {
               setProduct({ ...product, status: newValue });
             }}
-            renderInput={(params) => <TextField {...params} label="Product Status" margin="normal" required={true} />}
+            renderInput={(params) => <TextField {...params} label="Product Status" margin="normal" required />}
           />
         </Stack>
-        <Stack direction="row" spacing={4} useFlexGap={true}>
+        <Stack direction="row" spacing={4} useFlexGap>
           <TextField
             sx={{ width: '500px' }}
             label="Product Description"
             margin="normal"
-            multiline={true}
+            multiline
             minRows={12}
             maxRows={12}
-            onChange={(e: any) => setProduct({ ...product, description: e.target.value })}
+            onChange={(e: any) => { setProduct({ ...product, description: e.target.value }); }}
           />
-          <Stack direction="column" spacing={4} useFlexGap={true}>
+          <Stack direction="column" spacing={4} useFlexGap>
             <ImageUpload isMultiple={false} width={200} setImageHandle={setProductImage} />
           </Stack>
         </Stack>
@@ -200,16 +197,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             label="Variant Title"
             fullWidth
             margin="normal"
-            required={true}
-            onChange={(e: any) => setVariant({ ...variant, title: e.target.value })}
+            required
+            onChange={(e: any) => { setVariant({ ...variant, title: e.target.value }); }}
           />
           <TextField
             size="small"
             label="SKU"
             margin="normal"
-            required={true}
+            required
             sx={{ width: 800 }}
-            onChange={(e: any) => setVariant({ ...variant, sku: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, sku: e.target.value }); }}
           />
           <TextField
             size="small"
@@ -217,16 +214,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             margin="normal"
             type="number"
             sx={{ width: 600 }}
-            onChange={(e: any) => setVariant({ ...variant, quantity: +e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, quantity: Number(e.target.value) }); }}
           />
           <TextField
             size="small"
             label="Price"
             margin="normal"
             type="number"
-            required={true}
+            required
             sx={{ width: 600 }}
-            onChange={(e: any) => setVariant({ ...variant, price: +e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, price: Number(e.target.value) }); }}
           />
         </Stack>
         <Stack direction="row" spacing={4}>
@@ -234,16 +231,16 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             sx={{ width: '350px' }}
             label="Variant Description"
             margin="normal"
-            multiline={true}
+            multiline
             minRows={11}
             maxRows={11}
-            onChange={(e: any) => setVariant({ ...variant, description: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, description: e.target.value }); }}
           />
           <Stack direction="column" marginTop={2}>
             <FormControlLabel
               control={<Checkbox defaultChecked />}
               label="Publish Variant"
-              onChange={(e: any) => setVariant({ ...variant, isPublish: e.target?.checked })}
+              onChange={(e: any) => { setVariant({ ...variant, isPublish: e.target?.checked }); }}
             />
             <FormControlLabel
               control={
@@ -257,20 +254,18 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
               }
               label="Add Discount"
             />
-            {isDiscount && (
-              <TextField
+            {isDiscount ? <TextField
                 size="small"
                 label="Discount %"
                 margin="normal"
                 type="number"
                 sx={{ width: 150 }}
                 // helperText="Incorrect entry."
-                onChange={(e: any) => setVariant({ ...variant, promotionValue: +e.target.value })}
-              />
-            )}
+                onChange={(e: any) => { setVariant({ ...variant, promotionValue: Number(e.target.value) }); }}
+              /> : null}
           </Stack>
-          <Stack direction="column" spacing={4} useFlexGap={true}>
-            <ImageUpload isMultiple={true} width={500} setImageHandle={setVariantImages} />
+          <Stack direction="column" spacing={4} useFlexGap>
+            <ImageUpload isMultiple width={500} setImageHandle={setVariantImages} />
           </Stack>
         </Stack>
 
@@ -284,42 +279,42 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             label="Name 1"
             fullWidth
             margin="normal"
-            onChange={(e: any) => setVariant({ ...variant, optionName1: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, optionName1: e.target.value }); }}
           />
           <TextField
             size="small"
             label="Value 1"
             fullWidth
             margin="normal"
-            onChange={(e: any) => setVariant({ ...variant, optionValue1: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, optionValue1: e.target.value }); }}
           />
           <TextField
             size="small"
             label="Name 2"
             fullWidth
             margin="normal"
-            onChange={(e: any) => setVariant({ ...variant, optionName2: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, optionName2: e.target.value }); }}
           />
           <TextField
             size="small"
             label="Value 2"
             fullWidth
             margin="normal"
-            onChange={(e: any) => setVariant({ ...variant, optionValue2: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, optionValue2: e.target.value }); }}
           />
           <TextField
             size="small"
             label="Name 3"
             fullWidth
             margin="normal"
-            onChange={(e: any) => setVariant({ ...variant, optionName3: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, optionName3: e.target.value }); }}
           />
           <TextField
             size="small"
             label="Value 3"
             fullWidth
             margin="normal"
-            onChange={(e: any) => setVariant({ ...variant, optionValue3: e.target.value })}
+            onChange={(e: any) => { setVariant({ ...variant, optionValue3: e.target.value }); }}
           />
         </Stack>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>

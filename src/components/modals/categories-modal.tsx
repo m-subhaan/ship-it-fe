@@ -1,4 +1,4 @@
-import { isGeneratorFunction } from 'util/types';
+import { isGeneratorFunction } from 'node:util/types';
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -46,19 +46,18 @@ const CategoriesModal: React.FC<CategoryModalProps> = ({ open, onClose, operatio
 
   const handleSave = async () => {
     const newCategory: Category = {
-      categoryName: categoryName,
+      categoryName,
       categoryId: category?.categoryId,
       subCategory: subCategories.filter((subCat) => subCat.subCategoryName.trim() !== ''), // Filter out empty subcategories
     };
     try {
-      
       if (operation === 'add') await createNewCategory(newCategory);
       if (operation === 'edit' && subCategories.length) await bulkUpsertSubCategories(newCategory);
       if (categoryName !== category?.categoryName) await updateCategoryName(category?.categoryId, categoryName);
       if (delSubCategories.length) await Promise.all(delSubCategories.map((x) => deleteSubCategories(x)));
       setDelSubCategories([]);
       onClose();
-    } catch (e:any) {
+    } catch (e: any) {
       toast.error(e.message, { autoClose: 3000 });
     }
   };
@@ -75,7 +74,7 @@ const CategoriesModal: React.FC<CategoryModalProps> = ({ open, onClose, operatio
 
   const handleDeleteSubcategory = (index: number) => {
     const temp = subCategories;
-    if (temp[index]?.subCategoryId) setDelSubCategories([...delSubCategories, temp[index]?.subCategoryId as string]);
+    if (temp[index]?.subCategoryId) setDelSubCategories([...delSubCategories, temp[index]?.subCategoryId!]);
     delete temp[index];
     setSubCategories(temp.filter((x) => x));
   };
@@ -102,7 +101,7 @@ const CategoriesModal: React.FC<CategoryModalProps> = ({ open, onClose, operatio
         <TextField
           label="Category Name"
           value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
+          onChange={(e) => { setCategoryName(e.target.value); }}
           fullWidth
           margin="normal"
         />
@@ -112,11 +111,11 @@ const CategoriesModal: React.FC<CategoryModalProps> = ({ open, onClose, operatio
               key={index}
               label={`Subcategory ${index + 1}`}
               value={subCat.subCategoryName}
-              onChange={(e) => handleSubCategoryChange(index, e.target.value)}
+              onChange={(e) => { handleSubCategoryChange(index, e.target.value); }}
               fullWidth
               margin="normal"
             />
-            <Button color="error" key={index + 1} onClick={(e) => handleDeleteSubcategory(index)}>
+            <Button color="error" key={index + 1} onClick={(e) => { handleDeleteSubcategory(index); }}>
               Delete
             </Button>
           </Stack>

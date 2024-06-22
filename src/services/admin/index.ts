@@ -1,11 +1,11 @@
-import { Admin } from '@/types/admin';
+import { type Admin } from '@/types/admin';
 
 export async function fetchAdmins(token: string): Promise<Admin[]> {
   const response = await fetch(`${process.env.SERVER_URL}/${process.env.API_VERSION}/admin/search`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      authorization: `${token}`,
+      authorization: token,
     },
   });
 
@@ -21,7 +21,7 @@ export async function addUser(token: string, user: Admin) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      authorization: `${token}`,
+      authorization: token,
     },
     body: JSON.stringify(user),
   });
@@ -36,7 +36,7 @@ export async function editUser(token: string, user: Admin, userId: string) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      authorization: `${token}`,
+      authorization: token,
     },
     body: JSON.stringify(user),
   });
@@ -51,7 +51,7 @@ export async function deleteUser(token: string, userId: string) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      authorization: `${token}`,
+      authorization: token,
     },
   });
 

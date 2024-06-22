@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
+import { Box } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import dayjs from 'dayjs';
 
@@ -9,10 +10,9 @@ import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
 import { LatestProducts } from '@/components/dashboard/overview/latest-products';
 import { Sales } from '@/components/dashboard/overview/sales';
 import { TasksProgress } from '@/components/dashboard/overview/tasks-progress';
-import { TotalUsers } from '@/components/dashboard/overview/total-users';
 import { TotalProfit } from '@/components/dashboard/overview/total-profit';
+import { TotalUsers } from '@/components/dashboard/overview/total-users';
 import { Traffic } from '@/components/dashboard/overview/traffic';
-import { Box } from '@mui/material';
 
 export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
 

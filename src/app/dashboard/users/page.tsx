@@ -26,7 +26,6 @@ export default function Page(): React.JSX.Element {
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = React.useState(false);
 
-
   const handleAddUserClick = () => {
     setModalOperation('add');
     setIsModalOpen(true);
@@ -58,8 +57,8 @@ export default function Page(): React.JSX.Element {
       const token = localStorage.getItem('jwt');
       if (token) {
         fetchAdmins(token)
-          .then((data) => setAdmins(data))
-          .catch((error) => console.error('Error fetching admins:', error));
+          .then((data) => { setAdmins(data); })
+          .catch((error) => { console.error('Error fetching admins:', error); });
       }
     }
   }, [isModalOpen, isConfirmationModalOpen]);
@@ -107,7 +106,7 @@ export default function Page(): React.JSX.Element {
       />
       <UserModal
         open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { setIsModalOpen(false); }}
         operation={modalOperation}
         admin={selectedAdmin}
       />

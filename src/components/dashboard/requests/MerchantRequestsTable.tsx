@@ -24,7 +24,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { fetchMerchantRequests, updateMerchantStatus } from '@/services/merchant';
 
-import { Merchant } from '@/types/merhcant';
+import { type Merchant } from '@/types/merhcant';
 
 export const MerchantRequestsTable: React.FC = () => {
   const [filter, setFilter] = useState<string>('PENDING');
@@ -78,19 +78,19 @@ export const MerchantRequestsTable: React.FC = () => {
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h4">Merchant Requests</Typography>
         <ButtonGroup>
-          <Button sx={buttonStyles(filter === '')} onClick={() => setFilter('')}>
+          <Button sx={buttonStyles(filter === '')} onClick={() => { setFilter(''); }}>
             All
           </Button>
-          <Button sx={buttonStyles(filter === 'ACCEPTED')} onClick={() => setFilter('ACCEPTED')}>
+          <Button sx={buttonStyles(filter === 'ACCEPTED')} onClick={() => { setFilter('ACCEPTED'); }}>
             Accepted
           </Button>
-          <Button sx={buttonStyles(filter === 'REJECTED')} onClick={() => setFilter('REJECTED')}>
+          <Button sx={buttonStyles(filter === 'REJECTED')} onClick={() => { setFilter('REJECTED'); }}>
             Rejected
           </Button>
-          <Button sx={buttonStyles(filter === 'REVOKED')} onClick={() => setFilter('REVOKED')}>
+          <Button sx={buttonStyles(filter === 'REVOKED')} onClick={() => { setFilter('REVOKED'); }}>
             Revoked
           </Button>
-          <Button sx={buttonStyles(filter === 'PENDING')} onClick={() => setFilter('PENDING')}>
+          <Button sx={buttonStyles(filter === 'PENDING')} onClick={() => { setFilter('PENDING'); }}>
             Pending
           </Button>
         </ButtonGroup>

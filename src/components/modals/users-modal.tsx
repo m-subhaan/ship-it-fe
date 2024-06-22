@@ -49,7 +49,7 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, operation, admin }
     const token = localStorage.getItem('jwt');
 
     if (operation == 'add' && token) await addUser(token, newAdmin);
-    if (operation == 'edit' && token) await editUser(token, newAdmin, admin?.adminId as string);
+    if (operation == 'edit' && token) await editUser(token, newAdmin, admin?.adminId!);
 
     onClose();
   };
@@ -74,23 +74,23 @@ const UserModal: React.FC<UserModalProps> = ({ open, onClose, operation, admin }
         <TextField
           label="First Name"
           value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          onChange={(e) => { setFirstName(e.target.value); }}
           fullWidth
           margin="normal"
         />
         <TextField
           label="Last Name"
           value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          onChange={(e) => { setLastName(e.target.value); }}
           fullWidth
           margin="normal"
         />
-        <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth margin="normal" />
+        <TextField label="Email" value={email} onChange={(e) => { setEmail(e.target.value); }} fullWidth margin="normal" />
         <TextField
           select
           label="Admin Type"
           value={adminType}
-          onChange={(e) => setAdminType(e.target.value as AdminTypes)}
+          onChange={(e) => { setAdminType(e.target.value as AdminTypes); }}
           fullWidth
           margin="normal"
         >

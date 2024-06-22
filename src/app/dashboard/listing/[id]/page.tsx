@@ -27,29 +27,29 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Product, Variant } from '@/types/products';
+import { type Product, type Variant } from '@/types/products';
 import ImageUpload from '@/components/common/ImageUpload';
 import ConfirmationModal from '@/components/modals/confirmation';
 import VariantModal from '@/components/modals/variant';
 
-type PageProps = {
+interface PageProps {
   params: {
     id: string;
   };
-};
+}
 
-type Category = {
+interface Category {
   label: string;
   value: string;
   subCategory: SubCategory[];
-};
+}
 
-type SubCategory = {
+interface SubCategory {
   label: string;
   value: string;
-};
+}
 
-const ListingPage = ({ params }: PageProps) => {
+function ListingPage({ params }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [expandedVariant, setExpandedVariant] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -64,7 +64,7 @@ const ListingPage = ({ params }: PageProps) => {
   const onConfirmDelete = async () => {
     let response: any;
     if (deleteVariant.length) response = await delVariant(deleteVariant);
-    if (response) toast.success("Variant Deleted Successfully", { autoClose: 3000 });
+    if (response) toast.success('Variant Deleted Successfully', { autoClose: 3000 });
     setIsConfirmationModalOpen(false);
 
     setProduct((prevProduct) => {
@@ -180,7 +180,7 @@ const ListingPage = ({ params }: PageProps) => {
           <TextField
             label="Product Title"
             value={product.title}
-            onChange={(e) => handleChange('title', e.target.value)}
+            onChange={(e) => { handleChange('title', e.target.value); }}
             fullWidth
             size="small"
             margin="normal"
@@ -188,7 +188,7 @@ const ListingPage = ({ params }: PageProps) => {
           <TextField
             label="Brand"
             value={product.brand}
-            onChange={(e) => handleChange('brand', e.target.value)}
+            onChange={(e) => { handleChange('brand', e.target.value); }}
             fullWidth
             size="small"
             margin="normal"
@@ -197,7 +197,7 @@ const ListingPage = ({ params }: PageProps) => {
             options={['ACTIVE', 'DRAFT']}
             fullWidth
             value={product.status}
-            onChange={(e, newValue) => handleChange('status', newValue)}
+            onChange={(e, newValue) => { handleChange('status', newValue); }}
             renderInput={(params) => <TextField {...params} label="Status" fullWidth size="small" margin="normal" />}
           />
         </Stack>
@@ -205,7 +205,7 @@ const ListingPage = ({ params }: PageProps) => {
           <TextField
             label="Vendor"
             value={product.vendor}
-            onChange={(e) => handleChange('vendor', e.target.value)}
+            onChange={(e) => { handleChange('vendor', e.target.value); }}
             fullWidth
             size="small"
             margin="normal"
@@ -230,40 +230,40 @@ const ListingPage = ({ params }: PageProps) => {
             getOptionLabel={(option) => option.label}
             value={subCategories.find((sub) => sub.value === product.subCategoryId) || null}
             onChange={(event: any, newValue: SubCategory | null) =>
-              handleChange('subCategoryId', newValue?.value || '')
+              { handleChange('subCategoryId', newValue?.value || ''); }
             }
             renderInput={(params) => <TextField {...params} label="Sub Category" margin="normal" />}
           />
         </Stack>
 
-        <Stack direction="row" spacing={4} useFlexGap={true}>
+        <Stack direction="row" spacing={4} useFlexGap>
           <TextField
             label="Product Description"
             value={product.description}
             sx={{ width: '800px' }}
-            onChange={(e) => handleChange('description', e.target.value)}
+            onChange={(e) => { handleChange('description', e.target.value); }}
             fullWidth
-            multiline={true}
+            multiline
             minRows={12}
             maxRows={12}
             size="small"
             margin="normal"
           />
-          <Stack direction="column" spacing={4} useFlexGap={true}>
+          <Stack direction="column" spacing={4} useFlexGap>
             <ImageUpload
               isMultiple={false}
               width={200}
-              setImageHandle={(images: any) => handleChange('imageUrl', images?.[0]?.base64 || '')}
+              setImageHandle={(images: any) => { handleChange('imageUrl', images?.[0]?.base64 || ''); }}
               reset={resetImage}
               preselectedImage={product?.imageUrl?.length ? [product.imageUrl] : []}
             />
           </Stack>
         </Stack>
-        <Stack direction="row" spacing={4} useFlexGap={true} sx={{ mt: 3 }} justifyContent="space-between">
+        <Stack direction="row" spacing={4} useFlexGap sx={{ mt: 3 }} justifyContent="space-between">
           <Typography variant="h5" component="h2">
             Variants
           </Typography>
-          <Button variant="outlined" color="primary" size="small" onClick={() => setShowAddVariantModal(true)}>
+          <Button variant="outlined" color="primary" size="small" onClick={() => { setShowAddVariantModal(true); }}>
             Add New Variant
           </Button>
         </Stack>
@@ -272,14 +272,14 @@ const ListingPage = ({ params }: PageProps) => {
           <Card key={variant.variantId} sx={{ p: 1 }}>
             <CardActions disableSpacing>
               <Box display="flex" justifyContent="space-between" width="100%">
-                <Typography variant="body1" onClick={() => toggleVariant(variant.variantId)}>
-                  {variant.title + '-' + variant.variantId}
+                <Typography variant="body1" onClick={() => { toggleVariant(variant.variantId); }}>
+                  {`${variant.title  }-${  variant.variantId}`}
                 </Typography>
                 <Box>
-                  <IconButton onClick={() => toggleVariant(variant.variantId)}>
+                  <IconButton onClick={() => { toggleVariant(variant.variantId); }}>
                     {expandedVariant === variant.variantId ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                   </IconButton>
-                  <IconButton onClick={() => handleDeleteVariant(variant.variantId)} color="error">
+                  <IconButton onClick={() => { handleDeleteVariant(variant.variantId); }} color="error">
                     <DeleteIcon />
                   </IconButton>
                 </Box>
@@ -288,11 +288,11 @@ const ListingPage = ({ params }: PageProps) => {
             <Collapse in={expandedVariant === variant.variantId} timeout="auto" unmountOnExit>
               <CardContent>
                 <Stack spacing={3}>
-                  <Stack direction="row" spacing={3} useFlexGap={true}>
+                  <Stack direction="row" spacing={3} useFlexGap>
                     <TextField
                       label="Variant Title"
                       value={variant.title}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'title', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'title', e.target.value); }}
                       size="small"
                       fullWidth
                       margin="normal"
@@ -300,7 +300,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="SKU"
                       value={variant.sku}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'sku', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'sku', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -310,7 +310,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Quantity"
                       value={variant.quantity}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'quantity', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'quantity', e.target.value); }}
                       fullWidth
                       size="small"
                       type="number"
@@ -319,7 +319,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Price"
                       value={variant.price}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'price', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'price', e.target.value); }}
                       fullWidth
                       size="small"
                       type="number"
@@ -327,14 +327,14 @@ const ListingPage = ({ params }: PageProps) => {
                     />
                   </Stack>
 
-                  <Stack direction="row" spacing={4} useFlexGap={true}>
+                  <Stack direction="row" spacing={4} useFlexGap>
                     <TextField
                       label="Variant Description"
                       value={variant.description}
                       sx={{ width: '500px' }}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'description', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'description', e.target.value); }}
                       fullWidth
-                      multiline={true}
+                      multiline
                       minRows={12}
                       maxRows={12}
                       size="small"
@@ -346,7 +346,7 @@ const ListingPage = ({ params }: PageProps) => {
                           <Checkbox
                             value={variant.isPublish}
                             checked={variant.isPublish}
-                            onChange={(e) => handleVariantChange(variant.variantId, 'isPublish', e.target.checked)}
+                            onChange={(e) => { handleVariantChange(variant.variantId, 'isPublish', e.target.checked); }}
                           />
                         }
                         label="Publish Variant"
@@ -356,7 +356,7 @@ const ListingPage = ({ params }: PageProps) => {
                           <Checkbox
                             value={variant.isPromotion}
                             checked={variant.isPromotion}
-                            onChange={(e) => handleVariantChange(variant.variantId, 'isPromotion', e.target.checked)}
+                            onChange={(e) => { handleVariantChange(variant.variantId, 'isPromotion', e.target.checked); }}
                           />
                         }
                         label="Add Discount"
@@ -368,14 +368,14 @@ const ListingPage = ({ params }: PageProps) => {
                         type="number"
                         sx={{ width: 150 }}
                         value={variant.promotionValue}
-                        onChange={(e) => handleVariantChange(variant.variantId, 'promotionValue', +e.target.value)}
+                        onChange={(e) => { handleVariantChange(variant.variantId, 'promotionValue', Number(e.target.value)); }}
 
                         // onChange={(e: any) => setVariant({ ...variant, promotionValue: +e.target.value })}
                       />
                     </Stack>
-                    <Stack direction="column" spacing={4} useFlexGap={true}>
+                    <Stack direction="column" spacing={4} useFlexGap>
                       <ImageUpload
-                        isMultiple={true}
+                        isMultiple
                         width={500}
                         setImageHandle={setVariantImages}
                         reset={resetImage}
@@ -387,7 +387,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Option Name 1"
                       value={variant.optionName1}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'optionName1', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'optionName1', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -395,7 +395,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Option Name 2"
                       value={variant.optionName2}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'optionName2', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'optionName2', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -403,7 +403,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Option Name 3"
                       value={variant.optionName3}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'optionName3', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'optionName3', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -413,7 +413,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Option Value 1"
                       value={variant.optionValue1}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'optionValue1', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'optionValue1', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -421,7 +421,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Option Value 2"
                       value={variant.optionValue2}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'optionValue2', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'optionValue2', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -429,7 +429,7 @@ const ListingPage = ({ params }: PageProps) => {
                     <TextField
                       label="Option Value 3"
                       value={variant.optionValue3}
-                      onChange={(e) => handleVariantChange(variant.variantId, 'optionValue3', e.target.value)}
+                      onChange={(e) => { handleVariantChange(variant.variantId, 'optionValue3', e.target.value); }}
                       fullWidth
                       size="small"
                       margin="normal"
@@ -449,18 +449,18 @@ const ListingPage = ({ params }: PageProps) => {
       <VariantModal
         product={product}
         open={showAddVariantModal}
-        onClose={() => setShowAddVariantModal(false)}
+        onClose={() => { setShowAddVariantModal(false); }}
         operation="add"
       />
       <ConfirmationModal
         open={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
+        onClose={() => { setIsConfirmationModalOpen(false); }}
         onConfirm={onConfirmDelete}
-        message={`Are you sure you want to delete the variant?`}
+        message="Are you sure you want to delete the variant?"
       />
       <ToastContainer />
     </Box>
   );
-};
+}
 
 export default ListingPage;

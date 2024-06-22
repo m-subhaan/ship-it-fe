@@ -122,21 +122,21 @@ export function UsersTable({
                   </TableCell>
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-                      <Avatar src={'/assets/admin.png'} />
+                      <Avatar src="/assets/admin.png" />
                       <Typography variant="subtitle2">{row.firstName}</Typography>
                     </Stack>
                   </TableCell>
                   <TableCell>{row.lastName}</TableCell>
                   <TableCell>{row.email}</TableCell>
-                  <TableCell>{USERS.find(x=>x.value === row.adminType)?.label}</TableCell>
+                  <TableCell>{USERS.find((x) => x.value === row.adminType)?.label}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <EditIcon
-                        onClick={() => onEditUserClick(row)}
+                        onClick={() => { onEditUserClick(row); }}
                         style={{ cursor: 'pointer', color: theme.palette.primary.main }}
                       />
                       <DeleteIcon
-                        onClick={() => handleDeleteClick(row)}
+                        onClick={() => { handleDeleteClick(row); }}
                         style={{ cursor: 'pointer', color: theme.palette.primary.main }}
                       />
                     </Stack>
@@ -170,8 +170,7 @@ export function UsersTable({
           }}
         >
           {/* Content of the edit modal */}
-          {selectedAdmin && (
-            <>
+          {selectedAdmin ? <>
               {/* Display admin details here */}
               <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSaveEdit}>
                 Save
@@ -179,13 +178,12 @@ export function UsersTable({
               <Button variant="outlined" startIcon={<CancelIcon />} onClick={handleCloseModal}>
                 Cancel
               </Button>
-            </>
-          )}
+            </> : null}
         </Box>
       </Modal>
       <ConfirmationModal
         open={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
+        onClose={() => { setIsConfirmationModalOpen(false); }}
         onConfirm={onConfirmDelete}
         message={`Are you sure you want to delete the user ${selectedAdmin?.firstName} ${selectedAdmin?.lastName}?`}
       />

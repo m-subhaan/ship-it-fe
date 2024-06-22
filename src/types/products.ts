@@ -1,4 +1,4 @@
-import { Category, SubCategory } from './category';
+import { type Category, type SubCategory } from './category';
 
 export interface PaginationInfo {
   totalItems: number;

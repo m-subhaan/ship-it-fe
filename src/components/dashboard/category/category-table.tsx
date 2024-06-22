@@ -26,7 +26,7 @@ import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
 import type { Admin } from '@/types/admin';
-import { Category } from '@/types/category';
+import { type Category } from '@/types/category';
 import { useSelection } from '@/hooks/use-selection';
 import ConfirmationModal from '@/components/modals/confirmation';
 
@@ -132,11 +132,11 @@ export function CategoriesTable({
                   <TableCell>
                     <Stack direction="row" spacing={1}>
                       <EditIcon
-                        onClick={() => onEditCategoryClick(row)}
+                        onClick={() => { onEditCategoryClick(row); }}
                         style={{ cursor: 'pointer', color: theme.palette.primary.main }}
                       />
                       <DeleteIcon
-                        onClick={() => handleDeleteClick(row)}
+                        onClick={() => { handleDeleteClick(row); }}
                         style={{ cursor: 'pointer', color: theme.palette.primary.main }}
                       />
                     </Stack>
@@ -170,8 +170,7 @@ export function CategoriesTable({
           }}
         >
           {/* Content of the edit modal */}
-          {selectedCategory && (
-            <>
+          {selectedCategory ? <>
               {/* Display admin details here */}
               <Button variant="outlined" startIcon={<CancelIcon />} onClick={handleCloseModal}>
                 Cancel
@@ -179,15 +178,14 @@ export function CategoriesTable({
               <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSaveEdit}>
                 Save
               </Button>
-            </>
-          )}
+            </> : null}
         </Box>
       </Modal>
       <ConfirmationModal
         open={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
-        onConfirm={ onConfirmDelete}
-        message={`Are you sure you want to delete the category ?`}
+        onClose={() => { setIsConfirmationModalOpen(false); }}
+        onConfirm={onConfirmDelete}
+        message="Are you sure you want to delete the category ?"
       />
     </Card>
   );

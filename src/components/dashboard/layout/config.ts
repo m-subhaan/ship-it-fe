@@ -2,7 +2,7 @@
 import type { NavItemConfig } from '@/types/nav';
 import { paths } from '@/paths';
 
-export const NAV_ITEMS: { [key: string]: NavItemConfig[] } = {
+export const NAV_ITEMS: Record<string, NavItemConfig[]> = {
   SUPER_ADMIN: [
     { key: 'dashboard', href: paths.dashboard.dashboard, title: 'Home', icon: 'home' },
     { key: 'users', href: paths.dashboard.users, title: 'Users Management', icon: 'users' },

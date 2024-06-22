@@ -73,8 +73,8 @@ export function ProductsTable({
 
   const onConfirmDelete = async () => {
     const response = await deleteProduct(selectedProduct.productId);
-    if (response) toast.success("Product Deleted Successfully", { autoClose: 3000 });
-    else toast.error("Error Deleting Product", { autoClose: 3000 });
+    if (response) toast.success('Product Deleted Successfully', { autoClose: 3000 });
+    else toast.error('Error Deleting Product', { autoClose: 3000 });
     setIsConfirmationModalOpen(false);
   };
 
@@ -161,8 +161,7 @@ export function ProductsTable({
         >
           {/* Content of the edit modal */}
           {/* {selectedProduct && ( */}
-          {false && (
-            <>
+          {false ? <>
               {/* Display admin details here */}
               <Button variant="contained" startIcon={<SaveIcon />} onClick={handleSaveEdit}>
                 Save
@@ -170,14 +169,13 @@ export function ProductsTable({
               <Button variant="outlined" startIcon={<CancelIcon />} onClick={handleCloseModal}>
                 Cancel
               </Button>
-            </>
-          )}
+            </> : null}
         </Box>
       </Modal>
 
       <ConfirmationModal
         open={isConfirmationModalOpen}
-        onClose={() => setIsConfirmationModalOpen(false)}
+        onClose={() => { setIsConfirmationModalOpen(false); }}
         onConfirm={onConfirmDelete}
         message={`Are you sure you want to delete ${selectedProduct?.title}? \n Its variants will also get deleted!!`}
       />

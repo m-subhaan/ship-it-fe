@@ -25,7 +25,7 @@ export function SideNav(): React.JSX.Element {
 
   React.useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user && user.adminType) {
+    if (user?.adminType) {
       const items = NAV_ITEMS[user.adminType] || [];
       setUserNavItems(items);
     }

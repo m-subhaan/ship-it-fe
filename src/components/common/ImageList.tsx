@@ -17,12 +17,11 @@ export default function StandardImageList({ images }: any = []) {
   return (
     <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
       {console.log(images)}
-      {images?.length &&
-        images.map((item: any) => (
+      {images?.length ? images.map((item: any) => (
           <StyledImageListItem key={item.name}>
-            <img id={item.url} src={item.url} alt={item.name} loading="lazy" onClick={(e) => console.log(e)} />
+            <img id={item.url} src={item.url} alt={item.name} loading="lazy" onClick={(e) => { console.log(e); }} />
           </StyledImageListItem>
-        ))}
+        )) : null}
     </ImageList>
   );
 }

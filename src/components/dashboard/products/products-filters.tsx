@@ -7,12 +7,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
 import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 
-import { Category, SubCategory } from '@/types/category';
+import { type Category, type SubCategory } from '@/types/category';
 
 interface ProductsFiltersProps {
   onFiltersChange: (filters: any) => void;

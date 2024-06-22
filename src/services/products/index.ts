@@ -126,15 +126,15 @@ export async function updateVariant(variantId: string, data: object) {
 }
 
 export async function deleteProduct(productId: string) {
-    const token = localStorage.getItem('jwt');
-    const response = await fetch(`${process.env.SERVER_URL}/${process.env.API_VERSION}/product/remove/${productId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `${token}`,
-      },
-    });
-if(!response.ok) return false
+  const token = localStorage.getItem('jwt');
+  const response = await fetch(`${process.env.SERVER_URL}/${process.env.API_VERSION}/product/remove/${productId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `${token}`,
+    },
+  });
+  if (!response.ok) return false;
 
   // if (!response.ok) {
   //   throw new Error('Failed to delete Product');

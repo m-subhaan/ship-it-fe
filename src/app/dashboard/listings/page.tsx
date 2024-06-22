@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { toast, ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 import { config } from '@/config';
@@ -18,7 +19,7 @@ import { ProductsTable } from '@/components/dashboard/products/products-table';
 import ProductModal from '@/components/modals/product';
 import VariantModal from '@/components/modals/variant';
 
-type Filters = {
+interface Filters {
   text?: string;
   productId?: string;
   status?: string;
@@ -26,7 +27,7 @@ type Filters = {
   isPublish?: string;
   categoryId?: string;
   subCategoryId?: string;
-};
+}
 
 export default function Page(): React.JSX.Element {
   const [showAddProductModal, setShowAddProductModal] = useState(false);
@@ -42,7 +43,7 @@ export default function Page(): React.JSX.Element {
   const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState<Filters>({});
 
-  const fetchData = async (filters: Filters = {}, page: number = 1, perPage: number = 10) => {
+  const fetchData = async (filters: Filters = {}, page = 1, perPage = 10) => {
     try {
       const response = await fetchProducts({ ...filters, currentPage: page, perPage });
       // if (response.status == 'error') toast.error(response.message, { autoClose: 3000 });
@@ -109,14 +110,14 @@ export default function Page(): React.JSX.Element {
         <ProductModal
           createdProduct={setNewProduct}
           open={showAddProductModal}
-          onClose={() => setShowAddProductModal(false)}
+          onClose={() => { setShowAddProductModal(false); }}
           operation="add"
-          addMoreVariants={() => setShowAddVariantModal(true)}
+          addMoreVariants={() => { setShowAddVariantModal(true); }}
         />
         <VariantModal
           product={newProduct}
           open={showAddVariantModal}
-          onClose={() => setShowAddVariantModal(false)}
+          onClose={() => { setShowAddVariantModal(false); }}
           operation="add"
         />
       </Grid>

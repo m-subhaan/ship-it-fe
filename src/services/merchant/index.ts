@@ -1,4 +1,4 @@
-import { Merchant } from '@/types/merhcant';
+import { type Merchant } from '@/types/merhcant';
 
 const BASE_URL = `${process.env.SERVER_URL}/${process.env.API_VERSION}`;
 
