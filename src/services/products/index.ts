@@ -5,7 +5,6 @@ export async function fetchProducts(filters: any = {}) {
   const token = localStorage.getItem('jwt');
   const queryParams = new URLSearchParams();
 
-  console.log('FILTERS AT FUN==-> ', filters);
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
       queryParams.append(key, String(value));

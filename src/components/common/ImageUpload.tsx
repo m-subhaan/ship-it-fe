@@ -19,15 +19,15 @@ export default function ImageUpload({ isMultiple, width, setImageHandle, reset, 
   const [selectedImage, setSelectedImage] = useState<any>([]);
   useEffect(() => {
     if (preselectedImage?.length) {
-      console.log('ASDASD');
-      console.log(preselectedImage?.map((x: any) => ({ url: x })));
+      // console.log('ASDASD');
+      // console.log(preselectedImage?.map((x: any) => ({ url: x })));
       setSelectedImage(preselectedImage?.map((x: any) => ({ url: x })));
     }
   }, [preselectedImage]);
 
   useEffect(() => {
-    console.log('#'.repeat(1000));
-    console.log(selectedImage);
+    // console.log('#'.repeat(1000));
+    // console.log(selectedImage);
     setImageHandle(selectedImage);
   }, [selectedImage]);
 
@@ -40,8 +40,12 @@ export default function ImageUpload({ isMultiple, width, setImageHandle, reset, 
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => { resolve(reader.result); };
-      reader.onerror = (error) => { reject(error); };
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
     });
   }
 
@@ -79,18 +83,20 @@ export default function ImageUpload({ isMultiple, width, setImageHandle, reset, 
       <Grid container spacing={2} sx={{ marginTop: '10px' }}>
         {selectedImage.length ? (
           <ImageList sx={{ width, height: 200 }} cols={isMultiple ? 4 : 1} rowHeight={164}>
-            {selectedImage?.length ? selectedImage.map((item: any) => (
-                <StyledImageListItem key={item.name || item.url}>
-                  <img id={item.url} src={item.url} alt={item.name} loading="lazy" onClick={deleteImageHandle} />
-                </StyledImageListItem>
-              )) : null}
+            {selectedImage?.length
+              ? selectedImage.map((item: any) => (
+                  <StyledImageListItem key={item.name || item.url}>
+                    <img id={item.url} src={item.url} alt={item.name} loading="lazy" onClick={deleteImageHandle} />
+                  </StyledImageListItem>
+                ))
+              : null}
           </ImageList>
         ) : (
           <Box sx={{ height: 232, width }} />
         )}
       </Grid>
       <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />}>
-        Upload Image{isMultiple ? 's' : null}
+        {isMultiple ? 'Upload Images' : 'Upload Cover Image'}
         {isMultiple ? <VisuallyHiddenInput type="file" accept="image/*" multiple onChange={handleImageChange} /> : null}
         {!isMultiple && <VisuallyHiddenInput type="file" accept="image/*" onChange={handleImageChange} />}
       </Button>

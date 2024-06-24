@@ -33,7 +33,7 @@ interface ProductModalProps {
 const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, createdProduct, addMoreVariants }) => {
   const REQUIRED = {
     product: ['title', 'categoryId', 'brand', 'status'],
-    variant: ['title', 'sku', 'quantity', 'price'],
+    variant: ['title', 'sku', 'quantity', 'price', 'maxPrice'],
   };
 
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +46,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
   const [productImage, setProductImage] = useState<any>([]);
   const [variantImages, setVariantImages] = useState<any>([]);
   const [isSaveDisable, setIsSaveDisable] = useState<boolean>(true);
+  const [isSingleVariant, setIsSingleVariant] = useState<boolean>(false);
 
   const fetchCategoriesCallback = useCallback(async () => {
     const response = await fetchCategories();
@@ -75,6 +76,10 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
   useEffect(() => {
     if (!categories.length) fetchCategoriesCallback();
   }, []);
+  useEffect(() => {
+    if (isSingleVariant) setVariant({ ...variant, description: product.description || '', title: product.title || '' });
+    if (!isSingleVariant) setVariant({ ...variant, description: '', title: '' });
+  }, [isSingleVariant]);
 
   useEffect(() => {
     if (
@@ -121,24 +126,30 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             fullWidth
             margin="normal"
             required
-            onChange={(e: any) => { setProduct({ ...product, title: e.target.value }); }}
+            onChange={(e: any) => {
+              setProduct({ ...product, title: e.target.value });
+            }}
           />
-          {categories.length ? <Autocomplete
-                size="small"
-                fullWidth
-                options={categories}
-                onChange={(event: any, newValue: any) => {
-                  setProduct({ ...product, categoryId: newValue?.value });
-                  setSubCategories(
-                    newValue?.subCategory?.map((x: any) => ({ label: x.subCategoryName, value: x.subCategoryId })) || []
-                  );
-                }}
-                renderInput={(params) => <TextField {...params} label="Category" margin="normal" required />}
-              /> : null}
+          {categories.length ? (
+            <Autocomplete
+              size="small"
+              fullWidth
+              options={categories}
+              onChange={(event: any, newValue: any) => {
+                setProduct({ ...product, categoryId: newValue?.value });
+                setSubCategories(
+                  newValue?.subCategory?.map((x: any) => ({ label: x.subCategoryName, value: x.subCategoryId })) || []
+                );
+              }}
+              renderInput={(params) => <TextField {...params} label="Category" margin="normal" required />}
+            />
+          ) : null}
           <Autocomplete
             size="small"
             fullWidth
-            onChange={(event: any, newValue: any) => { setProduct({ ...product, subCategoryId: newValue?.value }); }}
+            onChange={(event: any, newValue: any) => {
+              setProduct({ ...product, subCategoryId: newValue?.value });
+            }}
             options={subCategories}
             renderInput={(params) => <TextField {...params} label="Sub Category" margin="normal" />}
           />
@@ -150,14 +161,18 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             size="small"
             fullWidth
             required
-            onChange={(e: any) => { setProduct({ ...product, brand: e.target.value }); }}
+            onChange={(e: any) => {
+              setProduct({ ...product, brand: e.target.value });
+            }}
           />
           <TextField
             label="Vendor"
             margin="normal"
             fullWidth
             size="small"
-            onChange={(e: any) => { setProduct({ ...product, vendor: e.target.value }); }}
+            onChange={(e: any) => {
+              setProduct({ ...product, vendor: e.target.value });
+            }}
           />
 
           <Autocomplete
@@ -171,6 +186,13 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             renderInput={(params) => <TextField {...params} label="Product Status" margin="normal" required />}
           />
         </Stack>
+
+        <FormControlLabel
+          control={<Checkbox checked={isSingleVariant} />}
+          label="Single Variant Product?"
+          onChange={(e: any) => setIsSingleVariant(!isSingleVariant)}
+        />
+
         <Stack direction="row" spacing={4} useFlexGap>
           <TextField
             sx={{ width: '500px' }}
@@ -179,7 +201,9 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             multiline
             minRows={12}
             maxRows={12}
-            onChange={(e: any) => { setProduct({ ...product, description: e.target.value }); }}
+            onChange={(e: any) => {
+              setProduct({ ...product, description: e.target.value });
+            }}
           />
           <Stack direction="column" spacing={4} useFlexGap>
             <ImageUpload isMultiple={false} width={200} setImageHandle={setProductImage} />
@@ -192,29 +216,37 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
         <Typography>You can add more variants on the next screen</Typography>
 
         <Stack direction="row" spacing={4}>
-          <TextField
-            size="small"
-            label="Variant Title"
-            fullWidth
-            margin="normal"
-            required
-            onChange={(e: any) => { setVariant({ ...variant, title: e.target.value }); }}
-          />
+          {!isSingleVariant && (
+            <TextField
+              size="small"
+              label="Variant Title"
+              fullWidth
+              margin="normal"
+              required
+              onChange={(e: any) => {
+                setVariant({ ...variant, title: e.target.value });
+              }}
+            />
+          )}
           <TextField
             size="small"
             label="SKU"
             margin="normal"
             required
             sx={{ width: 800 }}
-            onChange={(e: any) => { setVariant({ ...variant, sku: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, sku: e.target.value });
+            }}
           />
           <TextField
             size="small"
             label="Qty"
             margin="normal"
             type="number"
-            sx={{ width: 600 }}
-            onChange={(e: any) => { setVariant({ ...variant, quantity: Number(e.target.value) }); }}
+            sx={{ width: 400 }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, quantity: Number(e.target.value) });
+            }}
           />
           <TextField
             size="small"
@@ -222,25 +254,44 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             margin="normal"
             type="number"
             required
+            sx={{ width: 400 }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, price: Number(e.target.value) });
+            }}
+          />
+          <TextField
+            size="small"
+            label="Max Selling Price"
+            margin="normal"
+            type="number"
+            required
             sx={{ width: 600 }}
-            onChange={(e: any) => { setVariant({ ...variant, price: Number(e.target.value) }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, maxPrice: Number(e.target.value) });
+            }}
           />
         </Stack>
         <Stack direction="row" spacing={4}>
-          <TextField
-            sx={{ width: '350px' }}
-            label="Variant Description"
-            margin="normal"
-            multiline
-            minRows={11}
-            maxRows={11}
-            onChange={(e: any) => { setVariant({ ...variant, description: e.target.value }); }}
-          />
+          {!isSingleVariant && (
+            <TextField
+              sx={{ width: '350px' }}
+              label="Variant Description"
+              margin="normal"
+              multiline
+              minRows={11}
+              maxRows={11}
+              onChange={(e: any) => {
+                setVariant({ ...variant, description: e.target.value });
+              }}
+            />
+          )}
           <Stack direction="column" marginTop={2}>
             <FormControlLabel
               control={<Checkbox defaultChecked />}
               label="Publish Variant"
-              onChange={(e: any) => { setVariant({ ...variant, isPublish: e.target?.checked }); }}
+              onChange={(e: any) => {
+                setVariant({ ...variant, isPublish: e.target?.checked });
+              }}
             />
             <FormControlLabel
               control={
@@ -254,15 +305,19 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
               }
               label="Add Discount"
             />
-            {isDiscount ? <TextField
+            {isDiscount ? (
+              <TextField
                 size="small"
                 label="Discount %"
                 margin="normal"
                 type="number"
                 sx={{ width: 150 }}
                 // helperText="Incorrect entry."
-                onChange={(e: any) => { setVariant({ ...variant, promotionValue: Number(e.target.value) }); }}
-              /> : null}
+                onChange={(e: any) => {
+                  setVariant({ ...variant, promotionValue: Number(e.target.value) });
+                }}
+              />
+            ) : null}
           </Stack>
           <Stack direction="column" spacing={4} useFlexGap>
             <ImageUpload isMultiple width={500} setImageHandle={setVariantImages} />
@@ -279,42 +334,54 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
             label="Name 1"
             fullWidth
             margin="normal"
-            onChange={(e: any) => { setVariant({ ...variant, optionName1: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, optionName1: e.target.value });
+            }}
           />
           <TextField
             size="small"
             label="Value 1"
             fullWidth
             margin="normal"
-            onChange={(e: any) => { setVariant({ ...variant, optionValue1: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, optionValue1: e.target.value });
+            }}
           />
           <TextField
             size="small"
             label="Name 2"
             fullWidth
             margin="normal"
-            onChange={(e: any) => { setVariant({ ...variant, optionName2: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, optionName2: e.target.value });
+            }}
           />
           <TextField
             size="small"
             label="Value 2"
             fullWidth
             margin="normal"
-            onChange={(e: any) => { setVariant({ ...variant, optionValue2: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, optionValue2: e.target.value });
+            }}
           />
           <TextField
             size="small"
             label="Name 3"
             fullWidth
             margin="normal"
-            onChange={(e: any) => { setVariant({ ...variant, optionName3: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, optionName3: e.target.value });
+            }}
           />
           <TextField
             size="small"
             label="Value 3"
             fullWidth
             margin="normal"
-            onChange={(e: any) => { setVariant({ ...variant, optionValue3: e.target.value }); }}
+            onChange={(e: any) => {
+              setVariant({ ...variant, optionValue3: e.target.value });
+            }}
           />
         </Stack>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
@@ -328,9 +395,11 @@ const ProductModal: React.FC<ProductModalProps> = ({ open, onClose, operation, c
               <Button variant="contained" onClick={handleSave} disabled={isSaveDisable}>
                 Save
               </Button>
-              <Button variant="contained" onClick={handleSaveAndAddVariants} disabled={isSaveDisable}>
-                Save & add more Variants
-              </Button>
+              {!isSingleVariant && (
+                <Button variant="contained" onClick={handleSaveAndAddVariants} disabled={isSaveDisable}>
+                  Save & add more Variants
+                </Button>
+              )}
             </Stack>
           )}
         </Box>

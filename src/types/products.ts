@@ -13,6 +13,7 @@ export interface Variant {
   description: string;
   quantity: number;
   price: number;
+  maxPrice: number;
   sku: string;
   imageUrls: string[];
   isPromotion: boolean;
