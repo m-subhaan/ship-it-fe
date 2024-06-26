@@ -60,6 +60,7 @@ function ListingPage({ params }: PageProps) {
   const [showAddVariantModal, setShowAddVariantModal] = useState(false);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [deleteVariant, setDeleteVariant] = useState('');
+  const numbers = ['maxPrice', 'promotionValue', 'price', 'quantity'];
 
   const onConfirmDelete = async () => {
     let response: any;
@@ -110,17 +111,19 @@ function ListingPage({ params }: PageProps) {
           if (fetchedProduct[key] === null) {
             fetchedProduct[key] = '';
           }
+          if (numbers.includes(key)) fetchedProduct[key] = +fetchedProduct[key];
         }
 
         // Replace null values with empty strings for the variant fields
         if (fetchedProduct.variant) {
           fetchedProduct.variant = fetchedProduct.variant.map((variant: Variant) => {
-            const updatedVariant: Partial<Variant> = { ...variant };
+            const updatedVariant: Partial<any> = { ...variant };
             for (const key in updatedVariant) {
               const variantKey = key as keyof Variant;
               if (updatedVariant[variantKey] === null) {
                 updatedVariant[variantKey] = '' as any; // Cast to any to resolve type issues
               }
+              if (numbers.includes(variantKey)) updatedVariant[variantKey] = +updatedVariant[variantKey];
             }
             return updatedVariant as Variant;
           });
@@ -166,7 +169,9 @@ function ListingPage({ params }: PageProps) {
     setProduct((prevProduct) => {
       if (!prevProduct) return null;
       const updatedVariants = prevProduct.variant.map((variant) =>
-        variant.variantId === variantId ? { ...variant, [field]: value || '' } : variant
+        variant.variantId === variantId
+          ? { ...variant, [field]: numbers.includes(field) ? +value : value || '' }
+          : variant
       );
       return { ...prevProduct, variant: updatedVariants };
     });
@@ -179,6 +184,7 @@ function ListingPage({ params }: PageProps) {
   };
 
   const handleSave = async () => {
+    console.log('Product==>>>>', product);
     if (!product) return;
     setIsSaving(true);
     try {
@@ -408,7 +414,7 @@ function ListingPage({ params }: PageProps) {
                       label="Max Price Threshold"
                       value={variant.maxPrice}
                       onChange={(e) => {
-                        handleVariantChange(variant.variantId, 'maxPrice', e.target.value);
+                        handleVariantChange(variant.variantId, 'maxPrice', +e.target.value);
                       }}
                       fullWidth
                       size="small"
@@ -465,7 +471,7 @@ function ListingPage({ params }: PageProps) {
                         sx={{ width: 150 }}
                         value={variant.promotionValue}
                         onChange={(e) => {
-                          handleVariantChange(variant.variantId, 'promotionValue', Number(e.target.value));
+                          handleVariantChange(variant.variantId, 'promotionValue', e.target.value);
                         }}
 
                         // onChange={(e: any) => setVariant({ ...variant, promotionValue: +e.target.value })}
